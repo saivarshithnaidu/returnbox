@@ -15,16 +15,16 @@ export default function DemoBanner() {
         <span>
           This is a demo site by GrowX Labs. We can build this for your brand in 7 days.
         </span>
-        <a 
-          href="https://growxlabs.tech" 
-          target="_blank" 
+        <a
+          href="https://growxlabs.tech"
+          target="_blank"
           rel="noopener noreferrer"
           className="ml-2 font-bold text-[#F4B8C1] hover:text-[#FFF8F0] underline decoration-[#F4B8C1]/50 underline-offset-4 transition-colors hidden sm:inline"
         >
           [Get Your Website]
         </a>
       </div>
-      <button 
+      <button
         onClick={() => setIsVisible(false)}
         className="text-white/60 hover:text-white transition-colors ml-4 shrink-0"
         aria-label="Dismiss banner"

@@ -30,7 +30,7 @@ export default function Home() {
       </div>
 
       <Hero />
-      
+
       <FeaturedProducts />
 
       {/* ABOUT SECTION PREVIEW */}
@@ -41,7 +41,7 @@ export default function Home() {
             <FadeIn>
               <div className="relative aspect-[4/5] w-full rounded-[2rem] overflow-hidden border border-[#F4B8C1]/30 p-2 bg-white">
                 <div className="relative w-full h-full rounded-3xl overflow-hidden">
-                  <Image 
+                  <Image
                     src="/sana-portrait.png"
                     alt="Sana pouring candles"
                     fill
@@ -62,7 +62,7 @@ export default function Home() {
               </div>
               <div className="pt-8">
                 <Link href="/about" className="text-[#B76E79] hover:text-[#3D1C1C] transition-colors font-sans font-bold flex items-center gap-2 group">
-                  Read our full journey 
+                  Read our full journey
                   <span className="group-hover:translate-x-2 transition-transform">→</span>
                 </Link>
               </div>
@@ -82,7 +82,7 @@ export default function Home() {
               <h3 className="font-serif text-2xl text-[#3D1C1C]">100% Handmade</h3>
               <p className="font-sans text-[#8B5E5E]">Crafted deeply with personal attention, free from mass production machinery.</p>
             </FadeInItem>
-            
+
             <FadeInItem className="flex flex-col items-center text-center space-y-4 p-8 rounded-3xl hover:bg-[#FFF8F0] transition-colors duration-500">
               <div className="w-16 h-16 bg-[#F4B8C1]/20 rounded-full flex items-center justify-center text-[#B76E79]">
                 <Sparkles size={32} strokeWidth={1.5} />
@@ -106,19 +106,19 @@ export default function Home() {
       <section className="py-24 px-6 md:px-16 bg-[#FFF8F0]">
         <div className="max-w-6xl mx-auto space-y-12">
           <FadeIn className="text-center space-y-4">
-             <div className="flex justify-center items-center gap-3 text-[#B76E79] mb-4">
-                <InstagramIcon className="w-9 h-9" />
-             </div>
-             <h2 className="font-serif text-4xl text-[#3D1C1C]">Follow Our Journey</h2>
-             <p className="font-sans text-[#8B5E5E] text-lg max-w-xl mx-auto">
-               Join our community of gifting aesthetics. Tag us to be featured.
-             </p>
+            <div className="flex justify-center items-center gap-3 text-[#B76E79] mb-4">
+              <InstagramIcon className="w-9 h-9" />
+            </div>
+            <h2 className="font-serif text-4xl text-[#3D1C1C]">Follow Our Journey</h2>
+            <p className="font-sans text-[#8B5E5E] text-lg max-w-xl mx-auto">
+              Join our community of gifting aesthetics. Tag us to be featured.
+            </p>
           </FadeIn>
 
           <FadeIn staggerChildren={true} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {instaFeed.map((item, i) => (
               <FadeInItem key={i} className="relative aspect-square w-full rounded-2xl overflow-hidden group cursor-pointer border border-[#F4B8C1]/30 bg-white">
-                <Image 
+                <Image
                   src={item.src}
                   alt={`Instagram feed image ${i + 1}`}
                   fill
@@ -127,20 +127,20 @@ export default function Home() {
                   className="object-cover w-full h-full md:group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-[#B76E79]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                   <InstagramIcon className="text-white drop-shadow-md w-8 h-8" />
+                  <InstagramIcon className="text-white drop-shadow-md w-8 h-8" />
                 </div>
               </FadeInItem>
             ))}
           </FadeIn>
 
           <div className="text-center pt-8">
-            <a 
-               href="https://instagram.com/returnboxbysana" 
-               target="_blank" 
-               rel="noopener noreferrer"
-               className="inline-flex items-center gap-2 border-2 border-[#B76E79] text-[#B76E79] px-8 py-3 rounded-full hover:bg-[#F4B8C1]/20 transition-all font-sans font-medium"
+            <a
+              href="https://instagram.com/returnboxbysana"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 border-2 border-[#B76E79] text-[#B76E79] px-8 py-3 rounded-full hover:bg-[#F4B8C1]/20 transition-all font-sans font-medium"
             >
-               @returnboxbysana
+              @returnboxbysana
             </a>
           </div>
         </div>

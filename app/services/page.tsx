@@ -49,10 +49,10 @@ export default function Services() {
             {services.map((service, i) => (
               <FadeIn key={service.id} delay={i * 0.1} className="bg-[#FDE8EE] rounded-2xl flex flex-col min-h-[420px] hover:shadow-sm transition-shadow overflow-hidden group">
                 <div className="relative w-full aspect-video overflow-hidden rounded-t-2xl shrink-0">
-                  <Image 
-                    src={service.img} 
-                    alt={service.name} 
-                    fill 
+                  <Image
+                    src={service.img}
+                    alt={service.name}
+                    fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
@@ -61,9 +61,9 @@ export default function Services() {
                   <p className="text-[#2D1515] opacity-80 leading-[1.7] mb-8 flex-1">
                     {service.desc}
                   </p>
-                  <a 
+                  <a
                     href={`https://wa.me/1234567890?text=I'm interested in the ${service.name} service`}
-                    target="_blank" 
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="mt-auto bg-[#B76E79] text-white px-8 py-3 rounded-full hover:bg-[#9a5a65] transition-all flex items-center justify-center gap-2 font-medium"
                   >
