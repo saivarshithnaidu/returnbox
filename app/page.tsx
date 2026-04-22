@@ -7,12 +7,12 @@ import { Sparkles, HeartHandshake, ShieldCheck } from "lucide-react";
 
 export default function Home() {
   const instaFeed = [
-    "/our-story.png",
-    "/lotus-candle.png",
-    "/sunflower-candle.png",
-    "/custom-hamper.png",
-    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=400&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1512909414166-7e8824f92692?q=80&w=400&auto=format&fit=crop"
+    { src: "/our-story.png" },
+    { src: "/lotus-candle.png" },
+    { src: "/sunflower-candle.png" },
+    { src: "/custom-hamper.png" },
+    { src: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop" },
+    { src: "https://images.unsplash.com/photo-1512909414166-7e8824f92692?q=80&w=800&auto=format&fit=crop" }
   ];
 
   const InstagramIcon = ({ className }: { className?: string }) => (
@@ -116,13 +116,15 @@ export default function Home() {
           </FadeIn>
 
           <FadeIn staggerChildren={true} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {instaFeed.map((img, i) => (
-              <FadeInItem key={i} className="relative aspect-[4/5] w-full rounded-2xl overflow-hidden group cursor-pointer border border-[#F4B8C1]/30">
+            {instaFeed.map((item, i) => (
+              <FadeInItem key={i} className="relative aspect-square w-full rounded-2xl overflow-hidden group cursor-pointer border border-[#F4B8C1]/30 bg-white">
                 <Image 
-                  src={img}
+                  src={item.src}
                   alt={`Instagram feed image ${i + 1}`}
                   fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-700 blur-[1px] group-hover:blur-none"
+                  quality={90}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
+                  className="object-cover w-full h-full md:group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-[#B76E79]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                    <InstagramIcon className="text-white drop-shadow-md w-8 h-8" />
