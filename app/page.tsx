@@ -42,7 +42,7 @@ export default function Home() {
               <div className="relative aspect-[4/5] w-full rounded-[2rem] overflow-hidden border border-[#F4B8C1]/30 p-2 bg-white">
                 <div className="relative w-full h-full rounded-3xl overflow-hidden">
                   <Image 
-                    src="https://images.unsplash.com/photo-1582046200234-f8753eab2df7?q=80&w=1200&auto=format&fit=crop"
+                    src="https://images.unsplash.com/photo-1543168256-418811576931?q=80&w=1200&auto=format&fit=crop"
                     alt="Sana pouring candles"
                     fill
                     className="object-cover hover:scale-105 transition-transform duration-700"

@@ -21,7 +21,7 @@ export default function FeaturedProducts() {
       id: 3,
       name: "Custom Hamper",
       desc: "Bespoke curated hamper featuring candles, artisanal chocolates, and personalized notes.",
-      img: "https://images.unsplash.com/photo-1544776193-352d25ef81bf?q=80&w=800&auto=format&fit=crop"
+      img: "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?q=80&w=800&auto=format&fit=crop"
     }
   ];
 
