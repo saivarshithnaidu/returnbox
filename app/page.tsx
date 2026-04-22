@@ -12,7 +12,7 @@ export default function Home() {
     { src: "/sunflower-candle.png" },
     { src: "/custom-hamper.png" },
     { src: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop" },
-    { src: "https://images.unsplash.com/photo-1512909414166-7e8824f92692?q=80&w=800&auto=format&fit=crop" }
+    { src: "/insta-6.png" }
   ];
 
   const InstagramIcon = ({ className }: { className?: string }) => (
