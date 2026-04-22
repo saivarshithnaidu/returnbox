@@ -9,19 +9,19 @@ export default function FeaturedProducts() {
       id: 1,
       name: "Lotus Candle",
       desc: "Delicate hand-poured lotus shape representing purity and enlightenment. Soft floral scent.",
-      img: "https://images.unsplash.com/photo-1602874801007-bd458bb1b8b6?q=80&w=800&auto=format&fit=crop"
+      img: "/lotus-candle.png"
     },
     {
       id: 2,
       name: "Sunflower Candle",
       desc: "Bright, cheerful sunflower design with uplifting citrus and vanilla fragrance notes.",
-      img: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=800&auto=format&fit=crop"
+      img: "/sunflower-candle.png"
     },
     {
       id: 3,
       name: "Custom Hamper",
       desc: "Bespoke curated hamper featuring candles, artisanal chocolates, and personalized notes.",
-      img: "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?q=80&w=800&auto=format&fit=crop"
+      img: "/custom-hamper.png"
     }
   ];
 

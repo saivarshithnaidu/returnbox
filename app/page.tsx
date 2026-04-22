@@ -7,12 +7,12 @@ import { Sparkles, HeartHandshake, ShieldCheck } from "lucide-react";
 
 export default function Home() {
   const instaFeed = [
-    "https://images.unsplash.com/photo-1602874801007-bd458bb1b8b6?q=80&w=400&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=400&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1544776193-352d25ef81bf?q=80&w=400&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1513201099705-a9746e1e201f?q=80&w=400&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1512909006721-3d6018887383?q=80&w=400&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1582046200234-f8753eab2df7?q=80&w=400&auto=format&fit=crop"
+    "/our-story.png",
+    "/lotus-candle.png",
+    "/sunflower-candle.png",
+    "/custom-hamper.png",
+    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=400&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1512909414166-7e8824f92692?q=80&w=400&auto=format&fit=crop"
   ];
 
   const InstagramIcon = ({ className }: { className?: string }) => (
@@ -42,7 +42,7 @@ export default function Home() {
               <div className="relative aspect-[4/5] w-full rounded-[2rem] overflow-hidden border border-[#F4B8C1]/30 p-2 bg-white">
                 <div className="relative w-full h-full rounded-3xl overflow-hidden">
                   <Image 
-                    src="https://images.unsplash.com/photo-1543168256-418811576931?q=80&w=1200&auto=format&fit=crop"
+                    src="/our-story.png"
                     alt="Sana pouring candles"
                     fill
                     className="object-cover hover:scale-105 transition-transform duration-700"

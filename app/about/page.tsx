@@ -16,7 +16,7 @@ export default function About() {
               <div className="relative aspect-[4/5] w-full rounded-tl-full rounded-br-full overflow-hidden border-[8px] border-[#F4B8C1] p-2 bg-white shadow-[0_20px_50px_rgba(244,184,193,0.3)]">
                  <div className="relative w-full h-full rounded-tl-full rounded-br-full overflow-hidden">
                     <Image 
-                      src="https://images.unsplash.com/photo-1543168256-418811576931?q=80&w=800&auto=format&fit=crop"
+                      src="/our-story.png"
                       alt="Sana pouring candles"
                       fill
                       className="object-cover"
