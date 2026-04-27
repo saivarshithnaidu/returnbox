@@ -33,7 +33,7 @@ Quantity: ${formData.quantity}
 Needed By: ${formData.date}
 Details: ${formData.instructions}`;
     
-    window.open(`https://wa.me/1234567890?text=${encodeURIComponent(text)}`, '_blank');
+    window.open(`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '91XXXXXXXXXX'}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   return (

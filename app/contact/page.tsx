@@ -66,7 +66,7 @@ export default function Contact() {
            {/* Right: Actions */}
            <div className="w-full md:w-1/2 flex flex-col justify-center space-y-6 relative z-10">
               <a 
-                href="https://wa.me/1234567890?text=Hi,%20I%20have%20an%20inquiry!"
+                href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '91XXXXXXXXXX'}?text=Hi Sana, I have an inquiry about Return Box!`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full bg-[#B76E79] text-white p-6 rounded-3xl flex flex-col items-center text-center gap-4 hover:bg-[#3D1C1C] transition-all group shadow-md hover:shadow-xl hover:-translate-y-1 duration-300"
