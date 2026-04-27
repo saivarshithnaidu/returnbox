@@ -6,6 +6,8 @@ export async function POST(req: NextRequest) {
     if (!amount) return NextResponse.json({ error: 'Amount required' }, { status: 400 });
 
     const { razorpay } = await import('@/lib/razorpay');
+    if (!razorpay) return NextResponse.json({ error: 'Razorpay not configured' }, { status: 500 });
+
     const order = await razorpay.orders.create({
       amount: Math.round(amount * 100), // Convert to paise
       currency,
