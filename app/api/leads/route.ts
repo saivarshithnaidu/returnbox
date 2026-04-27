@@ -7,8 +7,22 @@ export async function POST(req: NextRequest) {
     if (!name || !phone || !email) return NextResponse.json({ error: 'All fields required' }, { status: 400 });
 
     const discount_code = 'WELCOME10';
-    const { data, error } = await supabaseAdmin.from('leads').insert({ name, phone, email, discount_code, source: 'website_popup' }).select().single();
+    const { data: lead, error } = await supabaseAdmin.from('leads').insert({ name, phone, email, discount_code, source: 'website_popup' }).select().single();
     if (error) throw error;
+
+    // Check/Create Customer Profile & Referral Code
+    try {
+      const { data: existing } = await supabaseAdmin.from('customer_profiles').select('id, referral_code').or(`phone.eq.${phone},email.eq.${email}`).single();
+      
+      if (!existing) {
+        const referral_code = `${name.slice(0, 3).toUpperCase()}${phone.slice(-4)}${Math.floor(10 + Math.random() * 90)}`;
+        await supabaseAdmin.from('customer_profiles').insert({
+          name, phone, email, referral_code, discount_code
+        });
+      }
+    } catch (err) {
+      console.error('Profile creation error (non-blocking):', err);
+    }
 
     // Send welcome email (non-blocking)
     try {
@@ -16,7 +30,7 @@ export async function POST(req: NextRequest) {
       await sendWelcomeEmail({ name, email, discount_code });
     } catch { /* email service may not be configured */ }
 
-    return NextResponse.json({ success: true, discount_code, lead: data });
+    return NextResponse.json({ success: true, discount_code, lead });
   } catch (err) {
     console.error('Lead capture error:', err);
     return NextResponse.json({ error: 'Failed to save lead' }, { status: 500 });

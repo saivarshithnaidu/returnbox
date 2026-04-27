@@ -1,16 +1,20 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { ShoppingCart, DollarSign, AlertCircle, Users, TrendingUp, Package } from 'lucide-react';
+import { ShoppingCart, DollarSign, AlertCircle, Users, TrendingUp, Sparkles, Calendar, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { formatPrice, timeAgo } from '@/lib/utils';
+import { getUpcomingFestivals } from '@/lib/festivals';
 
 export default function AdminDashboard() {
   const [data, setData] = useState<any>(null);
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
+  const [forecasts, setForecasts] = useState<any[]>([]);
+  const upcomingFestivals = getUpcomingFestivals(30);
 
   useEffect(() => {
     fetch('/api/admin/analytics').then(r => r.json()).then(setData).catch(() => {});
     fetch('/api/admin/orders?limit=5').then(r => r.json()).then(d => setRecentOrders(d.orders || [])).catch(() => {});
+    fetch('/api/ai/inventory-forecast', { method: 'POST' }).then(r => r.json()).then(d => setForecasts(d.forecasts || [])).catch(() => {});
   }, []);
 
   const stats = [
@@ -23,6 +27,26 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-8">
       <h1 className="font-serif text-2xl text-white">Dashboard</h1>
+
+      {/* Festival Reminders */}
+      {upcomingFestivals.length > 0 && (
+        <div className="space-y-2">
+          {upcomingFestivals.map(f => (
+            <div key={f.name} className="bg-gradient-to-r from-[#B76E79]/10 to-[#B76E79]/5 border border-[#B76E79]/20 rounded-xl p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">{f.icon}</span>
+                <div>
+                  <p className="font-sans text-white font-medium">{f.name} is in {f.daysUntil} days!</p>
+                  <p className="font-sans text-xs text-[#F4B8C1]">Create your {f.name} offer now</p>
+                </div>
+              </div>
+              <Link href={`/admin/offers?festival=${encodeURIComponent(f.name)}&discount=${f.suggestedDiscount}`} className="flex items-center gap-1 bg-[#B76E79] text-white px-4 py-2 rounded-lg font-sans text-xs font-medium hover:bg-[#9a5a65] transition-colors">
+                <Calendar size={12} /> Create Offer
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -47,7 +71,7 @@ export default function AdminDashboard() {
             {recentOrders.length === 0 ? (
               <p className="font-sans text-sm text-[#8B5E5E] text-center py-8">No orders yet</p>
             ) : recentOrders.map((o: any) => (
-              <Link key={o.id} href={`/admin/orders`} className="flex items-center justify-between bg-[#0F0A0A] rounded-lg p-3 hover:bg-white/5 transition-colors">
+              <Link key={o.id} href="/admin/orders" className="flex items-center justify-between bg-[#0F0A0A] rounded-lg p-3 hover:bg-white/5 transition-colors">
                 <div>
                   <p className="font-sans text-sm text-white font-medium">{o.order_number}</p>
                   <p className="font-sans text-xs text-[#8B5E5E]">{o.customer_name} · {timeAgo(o.created_at)}</p>
@@ -61,8 +85,9 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Low Stock + Quick Stats */}
+        {/* Right column */}
         <div className="space-y-6">
+          {/* Low Stock */}
           <div className="bg-[#1A1010] rounded-xl border border-white/5 p-5">
             <h2 className="font-sans text-white font-medium mb-4 flex items-center gap-2"><AlertCircle size={16} className="text-orange-400" /> Low Stock Alerts</h2>
             {!data?.lowStock?.length ? <p className="font-sans text-sm text-[#8B5E5E]">All products well stocked</p> : (
@@ -77,6 +102,7 @@ export default function AdminDashboard() {
             )}
           </div>
 
+          {/* Visits */}
           <div className="bg-[#1A1010] rounded-xl border border-white/5 p-5">
             <h2 className="font-sans text-white font-medium mb-4 flex items-center gap-2"><TrendingUp size={16} className="text-green-400" /> Visits</h2>
             <div className="space-y-2 font-sans text-sm">
@@ -87,6 +113,31 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
+
+      {/* AI Production Planner */}
+      {forecasts.length > 0 && (
+        <div className="bg-[#1A1010] rounded-xl border border-white/5 p-5">
+          <h2 className="font-sans text-white font-medium mb-4 flex items-center gap-2"><Sparkles size={16} className="text-[#B76E79]" /> AI Production Planner 🤖</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {forecasts.map((f: any, i: number) => {
+              const colors = f.urgency === 'critical' ? 'border-red-500/30 bg-red-500/5' : f.urgency === 'warning' ? 'border-yellow-500/30 bg-yellow-500/5' : 'border-green-500/30 bg-green-500/5';
+              const textColor = f.urgency === 'critical' ? 'text-red-400' : f.urgency === 'warning' ? 'text-yellow-400' : 'text-green-400';
+              return (
+                <div key={i} className={`rounded-xl border p-4 ${colors}`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="font-sans text-white font-medium text-sm">{f.product_name}</p>
+                    <span className={`font-sans text-[10px] font-bold uppercase ${textColor}`}>{f.urgency}</span>
+                  </div>
+                  <p className="font-sans text-xs text-[#A0A0A0]">Stock: {f.current_stock} · {f.days_until_stockout} days left</p>
+                  {f.festival_impact && <p className="font-sans text-xs text-[#B76E79] mt-1">{f.festival_impact}</p>}
+                  <p className={`font-sans text-xs font-medium mt-2 ${textColor}`}>{f.reason}</p>
+                  {f.units_to_produce > 0 && <p className="font-sans text-xs text-white mt-1">→ Produce {f.units_to_produce} units</p>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

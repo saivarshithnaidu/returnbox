@@ -11,9 +11,15 @@ export default function Footer() {
         </div>
         <div className="flex flex-col space-y-3">
           <h4 className="font-sans text-white text-sm font-semibold tracking-wider uppercase mb-3">Explore</h4>
-          {[['Home', '/'], ['Products', '/products'], ['Custom Orders', '/custom-orders'], ['Gallery', '/gallery'], ['About', '/about'], ['Contact', '/contact'], ['Track Order', '/track']].map(([name, href]) => (
+          {[['Home', '/'], ['Products', '/products'], ['Bulk Orders', '/bulk-orders'], ['Blog', '/blog'], ['Custom Orders', '/custom-orders'], ['Gallery', '/gallery'], ['About', '/about'], ['Contact', '/contact'], ['Track Order', '/track']].map(([name, href]) => (
             <Link key={name} href={href} className="font-sans text-[#A0A0A0] text-sm hover:text-[#F4B8C1] transition-colors">{name}</Link>
           ))}
+        </div>
+        <div className="flex flex-col space-y-3">
+          <h4 className="font-sans text-white text-sm font-semibold tracking-wider uppercase mb-1">Discover</h4>
+          <Link href="/find-your-scent" className="font-sans text-[#F4B8C1] text-sm hover:text-white transition-colors">✨ Find Your Scent</Link>
+          <Link href="/wishlist" className="font-sans text-[#A0A0A0] text-sm hover:text-[#F4B8C1] transition-colors">My Wishlist</Link>
+          <Link href="/blog" className="font-sans text-[#A0A0A0] text-sm hover:text-[#F4B8C1] transition-colors">Blog & Tips</Link>
         </div>
         <div className="flex flex-col space-y-4">
           <h4 className="font-sans text-white text-sm font-semibold tracking-wider uppercase mb-1">Connect</h4>

@@ -5,6 +5,7 @@ import FloatingWhatsApp from '@/components/FloatingWhatsApp';
 import LeadCapturePopup from '@/components/ui/LeadCapturePopup';
 import AnnouncementBar from '@/components/layout/AnnouncementBar';
 import Footer from '@/components/layout/Footer';
+import GiftGenius from '@/components/GiftGenius';
 import { Toaster } from 'react-hot-toast';
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
@@ -27,6 +28,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       <Navbar />
       <LeadCapturePopup />
       <FloatingWhatsApp />
+      <GiftGenius />
       <main className="flex-1 w-full overflow-hidden">{children}</main>
       <Footer />
     </>

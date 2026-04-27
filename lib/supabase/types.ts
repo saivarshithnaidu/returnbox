@@ -110,6 +110,7 @@ export interface Order {
   billing_details_url: string | null;
   special_instructions: string | null;
   admin_notes: string | null;
+  referred_by_code: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -144,6 +145,140 @@ export interface PageVisit {
   country: string | null;
   device: string | null;
   visited_at: string;
+}
+
+// ═══════════════════════════════════════════════
+// NEW FEATURE TYPES
+// ═══════════════════════════════════════════════
+
+export interface Review {
+  id: string;
+  product_id: string;
+  order_id: string | null;
+  customer_name: string;
+  customer_phone: string | null;
+  rating: number;
+  review_text: string | null;
+  review_image_url: string | null;
+  is_approved: boolean;
+  created_at: string;
+  // Joined
+  product?: Product;
+}
+
+export interface AbandonedCart {
+  id: string;
+  customer_name: string | null;
+  customer_phone: string | null;
+  customer_email: string | null;
+  cart_items: OrderItem[];
+  total: number;
+  recovery_sent: boolean;
+  recovered: boolean;
+  created_at: string;
+}
+
+export interface BulkEnquiry {
+  id: string;
+  contact_name: string;
+  whatsapp_number: string;
+  email: string;
+  occasion_type: string;
+  event_date: string | null;
+  quantity: number;
+  budget_range: string;
+  preferred_products: string[];
+  color_preferences: string | null;
+  personalization_notes: string | null;
+  reference_images: string[];
+  additional_notes: string | null;
+  status: 'new' | 'contacted' | 'quoted' | 'converted' | 'closed';
+  quote_amount: number | null;
+  admin_notes: string | null;
+  created_at: string;
+}
+
+export interface Bundle {
+  id: string;
+  name: string;
+  description: string | null;
+  image_url: string | null;
+  products: { product_id: string; quantity: number }[];
+  original_price: number;
+  bundle_price: number;
+  savings_text: string | null;
+  is_active: boolean;
+  created_at: string;
+  // Joined for display
+  product_details?: Product[];
+}
+
+export interface ReturnRequest {
+  id: string;
+  order_id: string;
+  order_number: string;
+  issue_type: 'damaged' | 'wrong_item' | 'missing_item' | 'quality_issue' | 'other';
+  description: string;
+  photos: string[];
+  preferred_resolution: 'replacement' | 'refund';
+  status: 'new' | 'reviewing' | 'approved' | 'resolved' | 'rejected';
+  action_notes: string | null;
+  customer_name: string;
+  customer_phone: string;
+  created_at: string;
+}
+
+export interface CustomerProfile {
+  id: string;
+  user_id: string | null;
+  name: string;
+  phone: string;
+  email: string;
+  discount_code: string | null;
+  referral_code: string | null;
+  total_orders: number;
+  total_spent: number;
+  is_vip: boolean;
+  wishlist: string[];
+  saved_addresses: DeliveryAddress[];
+  created_at: string;
+}
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  content: string | null;
+  cover_image_url: string | null;
+  video_url: string | null;
+  video_type: 'youtube' | 'upload' | null;
+  tags: string[];
+  category: string | null;
+  is_published: boolean;
+  published_at: string | null;
+  view_count: number;
+  seo_title: string | null;
+  seo_description: string | null;
+  created_at: string;
+}
+
+export interface ReferralCredit {
+  id: string;
+  referrer_phone: string;
+  referred_order_id: string;
+  referral_code: string;
+  credit_amount: number;
+  is_used: boolean;
+  created_at: string;
+}
+
+export interface FestivalDate {
+  name: string;
+  date: string; // ISO date
+  icon: string;
+  suggested_discount: number;
+  suggested_banner: string;
 }
 
 // Cart types (client-side only)

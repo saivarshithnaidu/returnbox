@@ -21,6 +21,8 @@ export default function CheckoutPage() {
   const [orderNumber, setOrderNumber] = useState('');
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [form, setForm] = useState({ name: '', phone: '', email: '', address_line1: '', address_line2: '', city: '', state: '', pincode: '', landmark: '', instructions: '' });
+  const [referralCode, setReferralCode] = useState('');
+  const [abandonedCaptured, setAbandonedCaptured] = useState(false);
 
   const subtotal = getSubtotal();
   const delivery = getDeliveryCharge();
@@ -64,6 +66,7 @@ export default function CheckoutPage() {
         razorpay_order_id: rpOrderId, razorpay_payment_id: rpPaymentId,
         payment_screenshot_url: screenshotUrl || undefined, billing_details_url: billingUrl || undefined,
         special_instructions: form.instructions || undefined,
+        referred_by_code: referralCode || undefined,
       }),
     });
     return res.json();
@@ -100,6 +103,24 @@ export default function CheckoutPage() {
       if (orderRes.order) { setOrderNumber(orderRes.order.order_number); clearCart(); setStep(3); toast.success('Order placed! Payment verification in progress.'); }
     } catch { toast.error('Failed to place order'); }
     setLoading(false);
+  };
+
+  const captureAbandonedCart = async () => {
+    if (abandonedCaptured || !form.name || !form.phone) return;
+    try {
+      await fetch('/api/abandoned-carts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customer_name: form.name,
+          customer_phone: form.phone,
+          customer_email: form.email,
+          cart_items: items,
+          total,
+        }),
+      });
+      setAbandonedCaptured(true);
+    } catch { }
   };
 
   // Step 3: Confirmation
@@ -153,8 +174,16 @@ export default function CheckoutPage() {
                   <input className={inputCls} placeholder="Pincode *" required value={form.pincode} onChange={e => u('pincode', e.target.value)} />
                 </div>
                 <input className={inputCls} placeholder="Landmark (optional)" value={form.landmark} onChange={e => u('landmark', e.target.value)} />
+                <input className={inputCls} placeholder="Referral Code (optional)" value={referralCode} onChange={e => setReferralCode(e.target.value.toUpperCase())} />
                 <textarea className={`${inputCls} resize-none`} rows={2} placeholder="Special instructions (optional)" value={form.instructions} onChange={e => u('instructions', e.target.value)} />
-                <button onClick={() => { if (!form.name || !form.phone || !form.email || !form.address_line1 || !form.city || !form.state || !form.pincode) { toast.error('Please fill all required fields'); return; } setStep(2); }}
+                <button onClick={() => { 
+                  if (!form.name || !form.phone || !form.email || !form.address_line1 || !form.city || !form.state || !form.pincode) { 
+                    toast.error('Please fill all required fields'); 
+                    return; 
+                  } 
+                  captureAbandonedCart();
+                  setStep(2); 
+                }}
                   className="w-full bg-[#B76E79] text-white py-3.5 rounded-xl font-sans font-semibold hover:bg-[#9a5a65] transition-colors">Continue to Payment</button>
               </div>
             )}

@@ -2,8 +2,9 @@
 import { Suspense } from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Search, Loader2, Package } from 'lucide-react';
+import { Search, Loader2, Package, AlertCircle } from 'lucide-react';
 import OrderTimeline from '@/components/ui/OrderTimeline';
+import ReturnRequestForm from '@/components/ui/ReturnRequestForm';
 import { formatPrice } from '@/lib/utils';
 import type { Order } from '@/lib/supabase/types';
 
@@ -13,6 +14,7 @@ function TrackContent() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const [activeReturnOrder, setActiveReturnOrder] = useState<Order | null>(null);
 
   const handleSearch = useCallback(async (searchQuery?: string) => {
     const q = searchQuery || query;
@@ -83,8 +85,26 @@ function TrackContent() {
                 </div>
               ))}
             </div>
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={() => setActiveReturnOrder(order)}
+                className="flex items-center gap-2 text-[#8B5E5E] hover:text-[#B76E79] font-sans text-xs font-medium transition-colors"
+              >
+                <AlertCircle size={14} /> Report an Issue / Return
+              </button>
+            </div>
           </div>
         ))}
+
+        {activeReturnOrder && (
+          <ReturnRequestForm
+            orderId={activeReturnOrder.id}
+            orderNumber={activeReturnOrder.order_number}
+            customerName={activeReturnOrder.customer_name}
+            customerPhone={activeReturnOrder.customer_phone}
+            onClose={() => setActiveReturnOrder(null)}
+          />
+        )}
       </div>
     </div>
   );

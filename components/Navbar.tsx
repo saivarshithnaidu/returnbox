@@ -1,9 +1,10 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, ShoppingBag, Search } from 'lucide-react';
+import { Menu, X, ShoppingBag, Heart } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCartStore } from '@/lib/store/cart';
+import { useWishlistStore } from '@/lib/store/wishlist';
 import CartDrawer from './ui/CartDrawer';
 
 export default function Navbar() {
@@ -11,6 +12,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const itemCount = useCartStore(s => s.getItemCount());
+  const wishlistCount = useWishlistStore(s => s.getCount());
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -22,6 +24,8 @@ export default function Navbar() {
     { name: 'Home', href: '/' },
     { name: 'Products', href: '/products' },
     { name: 'Custom Orders', href: '/custom-orders' },
+    { name: 'Bulk Orders', href: '/bulk-orders' },
+    { name: 'Blog', href: '/blog' },
     { name: 'About', href: '/about' },
     { name: 'Contact', href: '/contact' },
   ];
@@ -40,6 +44,14 @@ export default function Navbar() {
           </div>
           <div className="flex items-center gap-3">
             <Link href="/track" className="hidden lg:flex text-[#2D1515] hover:text-[#B76E79] transition-colors font-sans text-sm">Track Order</Link>
+            {/* Wishlist */}
+            <Link href="/wishlist" className="relative text-[#2D1515] hover:text-[#B76E79] transition-colors p-2" aria-label="Wishlist">
+              <Heart size={20} />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-[#B76E79] text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">{wishlistCount}</span>
+              )}
+            </Link>
+            {/* Cart */}
             <button onClick={() => setCartOpen(true)} className="relative text-[#2D1515] hover:text-[#B76E79] transition-colors p-2" aria-label="Open cart">
               <ShoppingBag size={22} />
               {itemCount > 0 && (
@@ -59,6 +71,10 @@ export default function Navbar() {
                   <Link key={l.name} href={l.href} onClick={() => setMobileOpen(false)} className="font-serif text-xl text-[#2D1515] hover:text-[#B76E79] transition-colors">{l.name}</Link>
                 ))}
                 <Link href="/track" onClick={() => setMobileOpen(false)} className="font-sans text-sm text-[#8B5E5E]">Track Order</Link>
+                <Link href="/wishlist" onClick={() => setMobileOpen(false)} className="font-sans text-sm text-[#8B5E5E] flex items-center gap-1.5">
+                  <Heart size={14} /> Wishlist {wishlistCount > 0 && `(${wishlistCount})`}
+                </Link>
+                <Link href="/find-your-scent" onClick={() => setMobileOpen(false)} className="font-sans text-sm text-[#B76E79] font-medium">✨ Find Your Scent</Link>
                 <Link href="/products" onClick={() => setMobileOpen(false)} className="bg-[#B76E79] text-white px-8 py-3 rounded-full font-sans font-medium">Shop Now</Link>
               </div>
             </motion.div>

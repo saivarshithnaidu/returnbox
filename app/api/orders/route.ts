@@ -5,7 +5,7 @@ import { generateOrderNumber } from '@/lib/utils';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { customer_name, customer_phone, customer_email, delivery_address, items, subtotal, delivery_charge, discount_amount, coupon_code, total, payment_method, razorpay_order_id, razorpay_payment_id, payment_screenshot_url, billing_details_url, special_instructions } = body;
+    const { customer_name, customer_phone, customer_email, delivery_address, items, subtotal, delivery_charge, discount_amount, coupon_code, total, payment_method, razorpay_order_id, razorpay_payment_id, payment_screenshot_url, billing_details_url, special_instructions, referred_by_code } = body;
 
     if (!customer_name || !customer_phone || !customer_email || !items?.length) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -15,10 +15,25 @@ export async function POST(req: NextRequest) {
     const payment_status = payment_method === 'qr_upload' ? 'pending_verification' : payment_method === 'razorpay' && razorpay_payment_id ? 'paid' : 'pending';
 
     const { data, error } = await supabaseAdmin.from('orders').insert({
-      order_number, customer_name, customer_phone, customer_email, delivery_address, items, subtotal, delivery_charge: delivery_charge || 0, discount_amount: discount_amount || 0, coupon_code, total, payment_method, payment_status, order_status: 'new', razorpay_order_id, razorpay_payment_id, payment_screenshot_url, billing_details_url, special_instructions,
+      order_number, customer_name, customer_phone, customer_email, delivery_address, items, subtotal, delivery_charge: delivery_charge || 0, discount_amount: discount_amount || 0, coupon_code, total, payment_method, payment_status, order_status: 'new', razorpay_order_id, razorpay_payment_id, payment_screenshot_url, billing_details_url, special_instructions, referred_by_code,
     }).select().single();
 
     if (error) throw error;
+
+    // Referral Credit Logic
+    if (referred_by_code) {
+      try {
+        const { data: referrer } = await supabaseAdmin.from('customer_profiles').select('phone').eq('referral_code', referred_by_code).single();
+        if (referrer) {
+          await supabaseAdmin.from('referral_credits').insert({
+            referrer_phone: referrer.phone,
+            referred_order_id: data.id,
+            referral_code: referred_by_code,
+            credit_amount: 100,
+          });
+        }
+      } catch { /* ignore referral errors to not block order */ }
+    }
 
     // Increment coupon usage
     if (coupon_code) {

@@ -2,12 +2,11 @@ import Hero from '@/components/Hero';
 import { FadeIn, FadeInItem, TypingText, RosePetals } from '@/components/animations';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Sparkles, HeartHandshake, ShieldCheck } from 'lucide-react';
+import { Sparkles, HeartHandshake, ShieldCheck, BookOpen, ArrowRight } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
 import ProductCard from '@/components/ui/ProductCard';
 import type { Product, Category } from '@/lib/supabase/types';
 
-// Fetch featured products and categories for homepage
 async function getFeaturedData() {
   try {
     const [productsRes, categoriesRes] = await Promise.all([
@@ -22,7 +21,13 @@ async function getFeaturedData() {
   }
 }
 
-// Fallback static products for when DB isn't connected
+async function getBlogPosts() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/blog`, { next: { revalidate: 120 } }).catch(() => null);
+    return res ? (await res.json()).posts?.slice(0, 3) || [] : [];
+  } catch { return []; }
+}
+
 const fallbackProducts: Product[] = [
   { id: '1', name: 'Lotus Candle', slug: 'lotus-candle', description: 'Delicate hand-poured lotus shape.', short_description: 'Soft floral scent representing purity.', category_id: null, price: 499, sale_price: null, images: ['/lotus-candle.png'], stock_count: 10, is_in_stock: true, is_featured: true, is_active: true, weight_grams: 200, burn_time_hours: 8, fragrance: 'Floral', dimensions: null, materials: 'Soy Wax', tags: ['candle'], view_count: 0, order_count: 0, created_at: '', updated_at: '' },
   { id: '2', name: 'Sunflower Candle', slug: 'sunflower-candle', description: 'Bright, cheerful sunflower design.', short_description: 'Uplifting citrus and vanilla notes.', category_id: null, price: 599, sale_price: 499, images: ['/sunflower-candle.png'], stock_count: 15, is_in_stock: true, is_featured: true, is_active: true, weight_grams: 250, burn_time_hours: 10, fragrance: 'Citrus', dimensions: null, materials: 'Soy Wax', tags: ['candle'], view_count: 0, order_count: 0, created_at: '', updated_at: '' },
@@ -30,7 +35,10 @@ const fallbackProducts: Product[] = [
 ];
 
 export default async function Home() {
-  const { products, categories } = await getFeaturedData().catch(() => ({ products: [], categories: [] }));
+  const [{ products, categories }, blogPosts] = await Promise.all([
+    getFeaturedData().catch(() => ({ products: [], categories: [] })),
+    getBlogPosts(),
+  ]);
   const displayProducts = products.length > 0 ? products : fallbackProducts;
 
   const instaFeed = [
@@ -58,6 +66,24 @@ export default async function Home() {
               View All Products →
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* FIND YOUR SCENT QUIZ CTA */}
+      <section className="py-16 px-6 md:px-16 bg-gradient-to-r from-[#3D1C1C] to-[#1A0F0F] relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#B76E79] rounded-full blur-[100px]" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#F4B8C1] rounded-full blur-[80px]" />
+        </div>
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <FadeIn>
+            <Sparkles className="mx-auto mb-4 text-[#F4B8C1]" size={36} />
+            <h2 className="font-serif text-3xl md:text-4xl text-white mb-4">Not Sure Which Candle is Right for You?</h2>
+            <p className="font-sans text-[#F4B8C1] text-lg mb-8 max-w-xl mx-auto">Take our 30-second scent quiz and discover your perfect match</p>
+            <Link href="/find-your-scent" className="inline-flex items-center gap-2 bg-[#B76E79] text-white px-8 py-4 rounded-full font-sans font-semibold text-lg hover:bg-[#9a5a65] transition-colors shadow-lg shadow-[#B76E79]/30">
+              Find Your Scent ✨ <ArrowRight size={18} />
+            </Link>
+          </FadeIn>
         </div>
       </section>
 
@@ -112,8 +138,42 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* BLOG PREVIEW */}
+      {blogPosts.length > 0 && (
+        <section className="py-20 px-6 md:px-16 bg-[#FFF8F0]">
+          <div className="max-w-6xl mx-auto space-y-10">
+            <FadeIn className="text-center space-y-4">
+              <span className="text-sm font-bold text-[#B76E79] uppercase tracking-widest block font-sans">From Our Blog</span>
+              <h2 className="font-serif text-4xl text-[#2D1515]">Latest Stories</h2>
+            </FadeIn>
+            <div className="grid md:grid-cols-3 gap-6">
+              {blogPosts.map((post: any) => (
+                <Link key={post.id} href={`/blog/${post.slug}`} className="group bg-white rounded-2xl border border-[#F4B8C1]/20 overflow-hidden hover:shadow-lg transition-all">
+                  <div className="relative aspect-[16/10] overflow-hidden bg-[#F4B8C1]/10">
+                    {post.cover_image_url ? (
+                      <Image src={post.cover_image_url} alt={post.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="33vw" />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center"><BookOpen size={24} className="text-[#F4B8C1]" /></div>
+                    )}
+                  </div>
+                  <div className="p-5">
+                    <h3 className="font-serif text-lg text-[#3D1C1C] group-hover:text-[#B76E79] transition-colors line-clamp-2 mb-2">{post.title}</h3>
+                    {post.excerpt && <p className="font-sans text-xs text-[#8B5E5E] line-clamp-2">{post.excerpt}</p>}
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div className="text-center">
+              <Link href="/blog" className="inline-flex items-center gap-2 border-2 border-[#B76E79] text-[#B76E79] px-8 py-3 rounded-full hover:bg-[#B76E79] hover:text-white transition-all font-sans font-medium">
+                Read More →
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* INSTAGRAM */}
-      <section className="py-24 px-6 md:px-16 bg-[#FFF8F0]">
+      <section className="py-24 px-6 md:px-16 bg-white">
         <div className="max-w-6xl mx-auto space-y-12">
           <FadeIn className="text-center space-y-4">
             <h2 className="font-serif text-4xl text-[#3D1C1C]">Follow Our Journey</h2>

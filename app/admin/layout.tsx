@@ -2,18 +2,33 @@
 import { useState, useEffect, ReactNode } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, Package, ShoppingCart, Users, Tag, Gift, Settings, BarChart3, LogOut, Menu, X, ChevronDown, FolderOpen } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, Users, Tag, Gift, Settings, BarChart3, LogOut, Menu, X, ChevronDown, FolderOpen, Star, Boxes, Truck, RefreshCcw, BookOpen, AlertTriangle, HelpCircle, Bell } from 'lucide-react';
 
 const NAV = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
   { name: 'Products', href: '/admin/products', icon: Package, sub: [{ name: 'All Products', href: '/admin/products' }, { name: 'Add Product', href: '/admin/products/new' }] },
   { name: 'Categories', href: '/admin/categories', icon: FolderOpen },
+  { name: 'Bundles', href: '/admin/bundles', icon: Boxes },
+  { name: 'Reviews', href: '/admin/reviews', icon: Star },
+  { name: 'Blog', href: '/admin/blog', icon: BookOpen },
   { name: 'Leads', href: '/admin/leads', icon: Users },
+  { name: 'Bulk Enquiries', href: '/admin/bulk-enquiries', icon: Gift },
+  { name: 'Returns', href: '/admin/returns', icon: RefreshCcw },
+  { name: 'Abandoned Carts', href: '/admin/abandoned-carts', icon: AlertTriangle },
   { name: 'Coupons', href: '/admin/coupons', icon: Tag },
   { name: 'Offers', href: '/admin/offers', icon: Gift },
   { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
+  { name: 'Help & Docs', href: '/admin/docs', icon: HelpCircle },
+];
+
+const MOBILE_NAV = [
+  { name: 'Home', href: '/admin', icon: LayoutDashboard },
+  { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
+  { name: 'Products', href: '/admin/products', icon: Package },
+  { name: 'Leads', href: '/admin/leads', icon: Users },
+  { name: 'More', href: '#more', icon: Menu },
 ];
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -45,7 +60,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <Menu size={18} />
           </button>
         </div>
-        <nav className="flex-1 p-3 space-y-1 overflow-y-auto overflow-x-hidden scrollbar-hide">
+        <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto overflow-x-hidden scrollbar-hide">
           {NAV.map(item => {
             const Icon = item.icon;
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
@@ -54,14 +69,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             return (
               <div key={item.name} className="relative group">
                 <Link href={hasSub ? '#' : item.href} onClick={e => { if (hasSub) { e.preventDefault(); setExpandedItem(isExpanded ? null : item.name); } setSidebarOpen(false); }}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-sans text-sm transition-all ${isActive ? 'bg-[#B76E79]/10 text-[#B76E79]' : 'text-[#A0A0A0] hover:text-white hover:bg-white/5'} ${collapsed ? 'justify-center px-0' : ''}`}>
-                  <Icon size={20} className="shrink-0" />
+                  className={`flex items-center gap-3 px-3 py-2 rounded-xl font-sans text-sm transition-all ${isActive ? 'bg-[#B76E79]/10 text-[#B76E79]' : 'text-[#A0A0A0] hover:text-white hover:bg-white/5'} ${collapsed ? 'justify-center px-0' : ''}`}>
+                  <Icon size={18} className="shrink-0" />
                   {!collapsed && <span className="flex-1 truncate">{item.name}</span>}
                   {!collapsed && hasSub && <ChevronDown size={14} className={`transition-transform ${isExpanded ? 'rotate-180' : ''}`} />}
                   {collapsed && (
-                    <div className="absolute left-full ml-2 px-2 py-1 bg-[#1A1010] border border-white/10 rounded text-xs text-white opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap">
-                      {item.name}
-                    </div>
+                    <div className="absolute left-full ml-2 px-2 py-1 bg-[#1A1010] border border-white/10 rounded text-xs text-white opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap">{item.name}</div>
                   )}
                 </Link>
                 {hasSub && isExpanded && !collapsed && (
@@ -77,7 +90,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </nav>
         <div className="p-3 border-t border-white/5">
           <button onClick={logout} className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-sans text-sm text-[#8B5E5E] hover:text-red-400 hover:bg-red-400/5 w-full transition-all ${collapsed ? 'justify-center px-0' : ''}`}>
-            <LogOut size={20} className="shrink-0" />
+            <LogOut size={18} className="shrink-0" />
             {!collapsed && <span>Logout</span>}
           </button>
         </div>
@@ -87,23 +100,36 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       {sidebarOpen && <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />}
 
       {/* Main Content */}
-      <div className={`flex-1 transition-all duration-300 ${collapsed ? 'lg:ml-20' : 'lg:ml-64'}`}>
-        {/* Mobile Menu Trigger (Subtle) */}
+      <div className={`flex-1 transition-all duration-300 ${collapsed ? 'lg:ml-20' : 'lg:ml-64'} pb-20 lg:pb-0`}>
         <button onClick={() => setSidebarOpen(true)} className="lg:hidden fixed top-6 left-6 z-30 p-2 bg-[#1A1010] border border-white/10 rounded-lg text-[#B76E79] shadow-xl">
           <Menu size={20} />
         </button>
-
-        {/* Top bar replacement (very subtle) */}
         <div className="flex justify-end p-6 pb-0">
           <Link href="/" target="_blank" className="font-sans text-[10px] tracking-widest uppercase font-bold text-[#8B5E5E] hover:text-[#B76E79] transition-colors flex items-center gap-2 group">
             <span className="w-4 h-[1px] bg-[#8B5E5E] group-hover:bg-[#B76E79] transition-colors" />
             View Store
           </Link>
         </div>
+        <main className="p-6 md:p-10 max-w-7xl mx-auto">{children}</main>
+      </div>
 
-        <main className="p-6 md:p-10 max-w-7xl mx-auto">
-          {children}
-        </main>
+      {/* Mobile Bottom Nav */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1A1010] border-t border-white/10 flex">
+        {MOBILE_NAV.map(item => {
+          const Icon = item.icon;
+          const isActive = item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href);
+          const isMore = item.href === '#more';
+          return (
+            <button
+              key={item.name}
+              onClick={() => { if (isMore) setSidebarOpen(true); else router.push(item.href); }}
+              className={`flex-1 flex flex-col items-center gap-1 py-3 font-sans text-[10px] transition-colors ${isActive ? 'text-[#B76E79]' : 'text-[#8B5E5E]'}`}
+            >
+              <Icon size={20} />
+              <span>{item.name}</span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
