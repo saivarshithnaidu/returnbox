@@ -5,6 +5,12 @@ import { FadeIn, RosePetals } from '@/components/animations';
 import type { Product, Category } from '@/lib/supabase/types';
 import { Loader2, SlidersHorizontal } from 'lucide-react';
 
+const fallbackProducts: Product[] = [
+  { id: '1', name: 'Lotus Candle', slug: 'lotus-candle', description: 'Delicate hand-poured lotus shape.', short_description: 'Soft floral scent representing purity.', category_id: 'all', price: 499, sale_price: null, images: ['/lotus-candle.png'], stock_count: 10, is_in_stock: true, is_featured: true, is_active: true, weight_grams: 200, burn_time_hours: 8, fragrance: 'Floral', dimensions: null, materials: 'Soy Wax', tags: ['candle'], view_count: 0, order_count: 0, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: '2', name: 'Sunflower Candle', slug: 'sunflower-candle', description: 'Bright, cheerful sunflower design.', short_description: 'Uplifting citrus and vanilla notes.', category_id: 'all', price: 599, sale_price: 499, images: ['/sunflower-candle.png'], stock_count: 15, is_in_stock: true, is_featured: true, is_active: true, weight_grams: 250, burn_time_hours: 10, fragrance: 'Citrus', dimensions: null, materials: 'Soy Wax', tags: ['candle'], view_count: 0, order_count: 0, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: '3', name: 'Custom Hamper', slug: 'custom-hamper', description: 'Bespoke curated hamper.', short_description: 'Candles, chocolates & personalized notes.', category_id: 'all', price: 1299, sale_price: null, images: ['/custom-hamper.png'], stock_count: 5, is_in_stock: true, is_featured: true, is_active: true, weight_grams: 500, burn_time_hours: null, fragrance: null, dimensions: null, materials: null, tags: ['hamper'], view_count: 0, order_count: 0, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+];
+
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -18,9 +24,12 @@ export default function ProductsPage() {
       fetch('/api/admin/products').then(r => r.json()),
       fetch('/api/admin/categories').then(r => r.json()),
     ]).then(([p, c]) => {
-      setProducts((p.products || []).filter((x: Product) => x.is_active));
+      const fetchedProducts = (p.products || []).filter((x: Product) => x.is_active);
+      setProducts(fetchedProducts.length > 0 ? fetchedProducts : fallbackProducts);
       setCategories((c.categories || []).filter((x: Category) => x.is_active));
-    }).catch(() => {}).finally(() => setLoading(false));
+    }).catch(() => {
+      setProducts(fallbackProducts);
+    }).finally(() => setLoading(false));
   }, []);
 
   const filtered = products
